@@ -1,7 +1,5 @@
 from generators.prand import LCG
-from scipy import stats
 import matplotlib.pyplot as plt
-from numpy import random as ran
 from collections import Counter
 from generators.prand import LCG
 from scipy.stats import chisquare
@@ -35,7 +33,8 @@ def play():
         [2, 0, 1] # n
     ]
 
-    dist, pvalue = chisquare(second)
+    dataset = list(Counter(second).values())
+    dist, pvalue = chisquare(dataset)
     uni = 'YES' if pvalue > 0.05 else 'NO'
     print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
 
@@ -56,14 +55,9 @@ def play():
 if __name__ == "__main__":
     pl = play()
     print(pl)
-    # generate_histogram(pl)
+    generate_histogram(pl)
     # plt.hist(pl, bins=3)
     # plt.savefig('./test.jpg')
 
-    # pl = list(Counter(pl).values())
-    # print(pl)
 
-    # dist, pvalue = stats.chisquare(pl)
-    # uni = 'YES' if pvalue > 0.05 else 'NO'
-    # print(f"{dist:12.3f} {pvalue:12.8f} {uni}")
 
