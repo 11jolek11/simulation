@@ -60,10 +60,5 @@ if __name__ == "__main__":
     # plt.hist(pl, bins=3)
     # plt.savefig('./test.jpg')
 
-    # pl = list(Counter(pl).values())
-    # print(pl)
 
-    # dist, pvalue = stats.chisquare(pl)
-    # uni = 'YES' if pvalue > 0.05 else 'NO'
-    # print(f"{dist:12.3f} {pvalue:12.8f} {uni}")
 
