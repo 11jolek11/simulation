@@ -5,27 +5,7 @@ from generators.prand import LCG
 from scipy.stats import chisquare
 
 
-def generate_histogram(data: dict):
-    labels = list(data.keys())
-    datagroups = list(data.values())
-    bins = len(datagroups)
-
-    fig, ax = plt.subplots(1, 1)
-    ax.bar(labels, datagroups)
-    plt.savefig('hist.jpg')
-
-
-def play():
-    # 2 - win
-    # 1 - draw
-    # 0 - lost
-    result_table = {'wins': 0, 'draws': 0, 'loss': 0}
-
-    gen = LCG()
-    first = [gen.uniform_restricted(1, 3) for _ in range(100)]
-    second = [gen.uniform_restricted(1, 3) for _ in range(100)]
-
-    possible_output_matrix = [
+possible_output_matrix = [
 #        first
 #        k p   n
         [1, 2, 0], #k
@@ -33,23 +13,57 @@ def play():
         [2, 0, 1] # n
     ]
 
+
+def generate_histogram(zipped: zip):
+    temp = []
+
+    for one, two in zipped:
+        one = one - 1
+        two = two - 1
+        temp.append(possible_output_matrix[one][two])
+
+    dataset = list(Counter(temp).values())
+    print(Counter(temp))
+    dist, pvalue = chisquare(dataset)
+    uni = 'YES' if pvalue > 0.05 else 'NO'
+    print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+
+    fig, ax = plt.subplots(1, 1)
+    bins=[0, 1, 2, 3]
+    ax.hist(temp, bins = bins)
+    plt.xticks(bins)
+    plt.xlabel('Loss Draws Wins')
+    plt.savefig('hist.jpg')
+
+
+def play():
+    # 2 - win
+    # 1 - draw
+    # 0 - lost
+
+    gen = LCG()
+    first = [gen.uniform_restricted(1, 3) for _ in range(100)]
+    second = [gen.uniform_restricted(1, 3) for _ in range(100)]
+
     dataset = list(Counter(second).values())
     dist, pvalue = chisquare(dataset)
     uni = 'YES' if pvalue > 0.05 else 'NO'
     print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
 
     zipped = zip(first, second)
+    # print(zipped)
 
-    for one, two in zipped:
-        one = one - 1
-        two = two - 1
-        if possible_output_matrix[one][two] == 0:
-            result_table['loss'] += 1
-        if possible_output_matrix[one][two] == 1:
-            result_table['draws'] += 1
-        if possible_output_matrix[one][two] == 2:
-            result_table['wins'] += 1
-    return result_table
+    # for one, two in zipped:
+    #     one = one - 1
+    #     two = two - 1
+    #     if possible_output_matrix[one][two] == 0:
+    #         result_table['loss'] += 1
+    #     if possible_output_matrix[one][two] == 1:
+    #         result_table['draws'] += 1
+    #     if possible_output_matrix[one][two] == 2:
+    #         result_table['wins'] += 1
+    # return result_table
+    return zipped
 
 
 if __name__ == "__main__":
