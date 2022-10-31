@@ -1,4 +1,4 @@
-from first.generators.prand import Generators
+from generators.prand import LCG
 from scipy import stats
 import matplotlib.pyplot as plt
 from numpy import random as ran
@@ -47,10 +47,47 @@ class Game:
 
         plt.hist(data)
         plt.savefig("wins_of_" + player + "hist.jpg")
-        
 
+class Dice:
+    def __init__(self):
+        self.generator = LCG()
+        self.first_points = []
+        self.second_points = []
+        self.advanteges = []
+
+
+    def roll_dice(self, n: int = 30):
+        for _ in range(n):
+            self.first_points.append( self.generator.uniform_restricted(1, 6) +  self.generator.uniform_restricted(1, 6))
+            self.second_points.append( self.generator.uniform_restricted(1, 6) +  self.generator.uniform_restricted(1, 6))
+        for i in range(len( self.first_points)):
+             self.advanteges.append( self.first_points[i] -  self.second_points[i])
+
+    def generate_histogram(self):
+        fig, axs = plt.subplots(2)
+        axs[0].set_title('Hitogram of First Player results')
+        bins = range(2, 13)
+        axs[0].hist(self.first_points, bins=bins, color='green')
+        plt.xticks(bins)
+        axs[0].set_xlabel("Results")
+        axs[0].set_ylabel("Number of repetitions")
+
+
+        axs[1].set_title('Hitogram of First Player advantages')
+        bins = range(-10, 11)
+        axs[1].hist(self.advanteges, bins=bins, color='red')
+        plt.xticks(bins)
+        axs[1].set_xlabel("Advantege")
+        axs[1].set_ylabel("Number of repetitions")
+        plt.tight_layout()
+        print(len(self.first_points))
+        print(len(self.advanteges))
+        plt.savefig('hist_z3.jpg')
 
 if __name__ == "__main__":
-    game = Game()
-    print(game.play())
-    game.wins_histogram_plotter("first")
+    p = Dice()
+    p.roll_dice()
+    p.generate_histogram()
+    # game = Game()
+    # print(game.play())
+    # game.wins_histogram_plotter("first")
