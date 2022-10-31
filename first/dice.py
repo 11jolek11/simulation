@@ -83,6 +83,7 @@ class Dice:
         print(len(self.first_points))
         print(len(self.advanteges))
         plt.savefig('hist_z3.jpg')
+        
 
 if __name__ == "__main__":
     p = Dice()
