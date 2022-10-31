@@ -17,21 +17,69 @@ class LCG:
 
     def __seed(self):
         """Seed generator using system time"""
-        time.sleep(0.001)
         self.seed = round(datetime.now().timestamp()*10009)
+        # print("Generating seed ..." + str(self.seed))
 
     def generate(self):
         self.__seed()
+        time.sleep(0.001)
+        # print(self.seed)
         return (self.a*self.seed + self.c) % self.m
 
     def uniform(self):
-        return self.generate() / self.m
+        temp = self.generate() / self.m
+        return temp
 
     def uniform_range(self, start: float, end: float):
-        return (end - start) * self.uniform() + self.a
+        # generates random float
+        temp = (end - start) * self.uniform() + start
+        print(str(temp) + " <" + str(self.seed) + ">")
+        return temp
     
     def uniform_restricted(self, start: float, end: float):
-        return math.floor(abs(1 + end - start) * self.uniform() + start)
+        # Generates random int value
+        temp = math.floor(abs(1 + end - start) * self.uniform() + start)
+        # print(str(temp) + " <" + str(self.seed) + ">")
+        return temp
+
+
+class LCG_CLS:
+    "LCG generator implemented using classmethods"
+    seed = int(datetime.now().timestamp() * 10003)
+    x = seed
+    a = 22695477
+    c = 1
+    m = 2 ** 32
+
+    @classmethod
+    def _seed(cls, seed: int) -> None:
+        cls.seed = seed
+        cls.x = seed
+
+    @classmethod
+    def generate(cls) -> int:
+        cls.x = (cls.a * cls.x + cls.c) % cls.m
+        return cls.x
+
+    @classmethod
+    def uniform(cls) -> float:
+        # [0, 1)
+        return cls.generate() / cls.m
+
+    @classmethod
+    def uniform_range(cls, a: float, b: float) -> float:
+        # [a, b)
+        return (b - a) * cls.uniform() + a
+
+    @classmethod
+    def uniform_int(cls, a: int, b: int) -> int:
+        # [a, b]
+        return math.floor(abs(b - a + 1) * cls.uniform() + a)
+    # def uniform_int_restricted(self, start: float, end: float):
+        # return math.floor(abs(1 + end - start) * self.uniform() + start)
+
+
+
 
     # def generate(self):
     #     while True:
@@ -54,19 +102,31 @@ class LCG:
 
 if __name__ == "__main__":
     p = LCG()
-    # ucl = p.unifrom_restricted(1, 3)
-    temp = []
     for _ in range(100):
-        temp.append(p.uniform_restricted(1, 3))
+        print(p.uniform_restricted(0, 2*math.pi))
+    # temp = []
+    # for _ in range(100):
+    #     temp.append(p.uniform_restricted(1, 3))
 
-    dataset = list(Counter(temp).values())
+    # dataset = list(Counter(temp).values())
 
-    plt.hist(temp, bins=3)
-    plt.savefig('./test.jpg')
+    # plt.hist(temp, bins=3)
+    # plt.savefig('./test.jpg')
 
-    dist, pvalue = chisquare(dataset)
-    uni = 'YES' if pvalue > 0.05 else 'NO'
-    print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+    # dist, pvalue = chisquare(dataset)
+    # uni = 'YES' if pvalue > 0.05 else 'NO'
+    # print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+
+    # x = []
+    # y = []
+    # for _ in range(100):
+    #     x.append(p.uniform_restricted(1, 1000))
+
+    # for _ in range(100):
+    #     y.append(p.uniform_restricted(1, 1000))
+
+    # plt.scatter(x, y)
+    # plt.savefig('gen_scatter.jpg')
     
 
 
