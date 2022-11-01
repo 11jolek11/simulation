@@ -1,4 +1,4 @@
-from generators.prand import LCG
+from generators.prand import LCG, LCG_CLS
 from scipy import stats
 import matplotlib.pyplot as plt
 from numpy import random as ran
@@ -9,8 +9,9 @@ import statistics
 from time import sleep, time
 from scipy.stats import chisquare
 
-# TODO: dodaj test dla średnich 
-# TODO: dodaj punktowanie za strzał
+# TODO: dodaj test dla dwóch średnich niezaleznych
+# https://www.pythonfordatascience.org/independent-samples-t-test-python/
+# 
 class Archers:
     def __init__(self,  shield_x=8000, shield_y=8000) -> None:
         self.max_error_distance = 1000
@@ -105,15 +106,55 @@ def archery(rounds: int = 10, size: int = 1220) -> dict:
 
     dataset = list(Counter(debug_x).values())
 
-    # dist, pvalue = chisquare(dataset)
-    # uni = 'YES' if pvalue > 0.05 else 'NO'
-    # print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+    dist, pvalue = chisquare(dataset)
+    uni = 'YES' if pvalue > 0.05 else 'NO'
+    print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
 
     plt.scatter(debug_x, debug_y)
     plt.savefig('archers_deb.jpg')
 
     return archers_data
 
+def archery(rounds: int = 10, size: int = 800) -> dict:
+
+    shield = {i: 10-i for i in range(0, 11)}
+
+    archer1_data = {'scores': [], 'points': [], 'distances': []}
+    archer2_data = {'scores': [], 'points': [], 'distances': []}
+    for _ in range(rounds):
+        archer1_score, archer2_score = 0, 0
+        radius = size * 0.5
+
+        # archer1
+        dist = LCG_CLS.uniform_int(-1000, 1000)  # (0, 1000)
+        angle = LCG_CLS.uniform_range(0, 2 * math.pi)
+        x, y = dist * math.cos(angle), dist * math.sin(angle)
+        # archer1_score += 1 if abs(dist) <= radius else 0
+        if abs(dist) <= radius:
+            dist_in_cm = abs(dist)/10
+            archer1_score = shield[math.floor(dist_in_cm/8)]
+        else:
+            archer1_score = 0
+        archer1_data['points'].append((x, y))
+        archer1_data['scores'].append(archer1_score)
+        archer1_data['distances'].append(abs(dist))
+
+        # archer2
+        x, y = LCG_CLS.uniform_int(-900, 900), LCG_CLS.uniform_int(-900, 900)
+        dist = math.sqrt(x ** 2 + y ** 2)
+        # archer2_score += 1 if dist <= radius else 0
+        if abs(dist) <= radius:
+            dist_in_cm = abs(dist)/10
+            archer2_score = shield[math.floor(dist_in_cm/8)]
+        else:
+            archer2_score = 0
+
+        archer2_data['points'].append((x, y))
+        archer2_data['scores'].append(archer2_score)
+        archer2_data['distances'].append(dist)
+
+    archers_data = {'archer1': archer1_data, 'archer2': archer2_data}
+    return archers_data
 
 if __name__ == '__main__':
     import numpy as np
@@ -134,74 +175,15 @@ if __name__ == '__main__':
         score_archer1 += sum(result['archer1']['scores'])
         score_archer2 += sum(result['archer2']['scores'])
 
-    print(sum(dists_archer2) / len(dists_archer2))  # 500 * sqrt(2)
-    print(sum(dists_archer1) / len(dists_archer1))  # 500
-    print('---')
+    # print(sum(dists_archer2) / len(dists_archer2))  # 500 * sqrt(2)
+    # print(sum(dists_archer1) / len(dists_archer1))  # 500
+    print('#####')
     print(score_archer1, score_archer2)
 
     ax.scatter(*zip(*points_archer2), alpha=0.5)
     ax.scatter(*zip(*points_archer1), alpha=0.5)
     ax.set_xticks(np.arange(-1000, 1001, 250))
     ax.set_yticks(np.arange(-1000, 1001, 250))
-    target = plt.Circle((0, 0), 660, color='green', fill=False, linewidth=2.5)
-    ax.add_patch(target)
-    ax.set_aspect('equal', adjustable='box')
     plt.tight_layout()
     plt.savefig('archers_scatter_debug.jpg')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # test = Archers()
-    # test.simulate()
-    # fig, ax = plt.subplots()
-    # points_archer1 = []
-    # points_archer2 = []
-    # dists_archer1 = []
-    # dists_archer2 = []
-    # score_archer1 = 0
-    # score_archer2 = 0
-    # for _ in range(20):
-    #     result = archery()
-    #     dists_archer1 += result['archer1']['distances']
-    #     dists_archer2 += result['archer2']['distances']
-    #     points_archer1 += result['archer2']['points']
-    #     points_archer2 += result['archer1']['points']
-    #     score_archer1 += sum(result['archer1']['scores'])
-    #     score_archer2 += sum(result['archer2']['scores'])
-
-    # print(sum(dists_archer2) / len(dists_archer2))  # 500 * sqrt(2)
-    # print(sum(dists_archer1) / len(dists_archer1))  # 500
-    # print('---')
-    # print(score_archer1, score_archer2)
-
-    # ax.scatter(*zip(*points_archer2))
-    # ax.scatter(*zip(*points_archer1))
-    # ax.set_xticks(np.arange(-1000, 1001, 250))
-    # ax.set_yticks(np.arange(-1000, 1001, 250))
-    # target = plt.Circle((0, 0), 660, color='green', fill=False, linewidth=2.5)
-    # ax.add_patch(target)
-    # ax.set_aspect('equal', adjustable='box')
-    # plt.tight_layout()
-    # plt.savefig('z4.jpg')
