@@ -166,6 +166,10 @@ if __name__ == '__main__':
     dists_archer2 = []
     score_archer1 = 0
     score_archer2 = 0
+
+    temp1 = []
+    temp2 = []
+
     for _ in range(20):
         result = archery()
         dists_archer1 += result['archer1']['distances']
@@ -173,12 +177,18 @@ if __name__ == '__main__':
         points_archer1 += result['archer2']['points']
         points_archer2 += result['archer1']['points']
         score_archer1 += sum(result['archer1']['scores'])
+        temp1.extend(result['archer1']['scores'])
+
         score_archer2 += sum(result['archer2']['scores'])
+        temp2.extend(result['archer2']['scores'])
 
     # print(sum(dists_archer2) / len(dists_archer2))  # 500 * sqrt(2)
     # print(sum(dists_archer1) / len(dists_archer1))  # 500
     print('#####')
     print(score_archer1, score_archer2)
+    print('########### t Test ###########')
+    test = stats.ttest_ind(temp1, temp2)
+    print(test)
 
     ax.scatter(*zip(*points_archer2), alpha=0.5)
     ax.scatter(*zip(*points_archer1), alpha=0.5)
