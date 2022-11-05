@@ -33,7 +33,7 @@ def generate_histogram(zipped: zip):
     ax.hist(temp, bins = bins)
     plt.xticks(bins)
     plt.xlabel('Loss Draws Wins')
-    plt.savefig('hist.jpg')
+    plt.savefig('./images/kpn/kpn_hist.jpg')
 
 
 def play():

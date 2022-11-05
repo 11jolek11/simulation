@@ -1,7 +1,6 @@
 from generators.prand import LCG, LCG_CLS
 from scipy import stats
 import matplotlib.pyplot as plt
-from numpy import random as ran
 import numpy as np
 from collections import Counter
 import math
@@ -111,11 +110,14 @@ def archery(rounds: int = 10, size: int = 1220) -> dict:
     print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
 
     plt.scatter(debug_x, debug_y)
-    plt.savefig('archers_deb.jpg')
+    plt.savefig('./images/archers/archers_debug.jpg')
 
     return archers_data
 
 def archery(rounds: int = 10, size: int = 800) -> dict:
+    """
+    
+    """
 
     shield = {i: 10-i for i in range(0, 11)}
 
@@ -195,5 +197,4 @@ if __name__ == '__main__':
     ax.set_xticks(np.arange(-1000, 1001, 250))
     ax.set_yticks(np.arange(-1000, 1001, 250))
     plt.tight_layout()
-    plt.savefig('archers_scatter_debug.jpg')
-
+    plt.savefig('./images/archers/archers_scatter_debug.jpg')

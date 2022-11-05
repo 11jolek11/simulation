@@ -1,12 +1,14 @@
 from generators.prand import LCG
 from scipy import stats
 import matplotlib.pyplot as plt
-from numpy import random as ran
 import numpy as np
 from collections import Counter
 
 
 class Game:
+    """
+    Deprecated class don't use/read
+    """
     def __init__(self) -> None:
         results = {}
         sum_enabled = True
@@ -30,7 +32,7 @@ class Game:
     def histogram_plotter(self, player:str):
         if self.sum_enabled:
             plt.hist(self.results[player])
-            plt.savefig('./' + player + '_hist.jpg')
+            plt.savefig('./images/dice/dice_' + player + '_hist.jpg')
         else:
             print("error")
 
@@ -82,7 +84,7 @@ class Dice:
         plt.tight_layout()
         print(len(self.first_points))
         print(len(self.advanteges))
-        plt.savefig('hist_z3.jpg')
+        plt.savefig('./images/dice/hist_z3.jpg')
         
 
 if __name__ == "__main__":

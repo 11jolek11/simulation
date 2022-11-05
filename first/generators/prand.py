@@ -6,7 +6,7 @@ from scipy.stats import chisquare
 import math
 import time
 
-
+# TODO: uporządkować cały bałagan
 
 class LCG:
     def __init__(self) -> None:
@@ -80,8 +80,7 @@ class LCG_CLS:
         # randint
         # [a, b]
         return math.floor(abs(b - a + 1) * cls.uniform() + a)
-    # def uniform_int_restricted(self, start: float, end: float):
-        # return math.floor(abs(1 + end - start) * self.uniform() + start)
+
 
 
 
