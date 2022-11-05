@@ -8,6 +8,7 @@ import time
 
 
 # class LCG:
+# 
 #     def __init__(self) -> None:
 #         self.a=1103515245
 #         self.c=12345
