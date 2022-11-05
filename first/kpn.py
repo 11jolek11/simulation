@@ -1,4 +1,4 @@
-from generators.prand import LCG
+from generators.prand import LCG_CLS
 import matplotlib.pyplot as plt
 from collections import Counter
 from generators.prand import LCG
@@ -41,9 +41,11 @@ def play():
     # 1 - draw
     # 0 - lost
 
-    gen = LCG()
-    first = [gen.uniform_restricted(1, 3) for _ in range(100)]
-    second = [gen.uniform_restricted(1, 3) for _ in range(100)]
+    gen = LCG_CLS()
+    first = [gen.uniform_int(1, 3) for _ in range(100)]
+    second = [gen.uniform_int(1, 3) for _ in range(100)]
+    # first = [gen.uniform_restricted(1, 3) for _ in range(100)]
+    # second = [gen.uniform_restricted(1, 3) for _ in range(100)]
 
     dataset = list(Counter(second).values())
     dist, pvalue = chisquare(dataset)

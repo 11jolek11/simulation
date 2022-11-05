@@ -6,41 +6,40 @@ from scipy.stats import chisquare
 import math
 import time
 
-# TODO: uporządkować cały bałagan
 
-class LCG:
-    def __init__(self) -> None:
-        self.a=1103515245
-        self.c=12345
-        self.m=pow(2, 31)
-        self.seed = 0
+# class LCG:
+#     def __init__(self) -> None:
+#         self.a=1103515245
+#         self.c=12345
+#         self.m=pow(2, 31)
+#         self.seed = 0
 
-    def __seed(self):
-        """Seed generator using system time"""
-        self.seed = round(datetime.now().timestamp()*10009)
-        # print("Generating seed ..." + str(self.seed))
+#     def __seed(self):
+#         """Seed generator using system time"""
+#         self.seed = round(datetime.now().timestamp()*10009)
+#         # print("Generating seed ..." + str(self.seed))
 
-    def generate(self):
-        self.__seed()
-        time.sleep(0.001)
-        # print(self.seed)
-        return (self.a*self.seed + self.c) % self.m
+#     def generate(self):
+#         self.__seed()
+#         time.sleep(0.001)
+#         # print(self.seed)
+#         return (self.a*self.seed + self.c) % self.m
 
-    def uniform(self):
-        temp = self.generate() / self.m
-        return temp
+#     def uniform(self):
+#         temp = self.generate() / self.m
+#         return temp
 
-    def uniform_range(self, start: float, end: float):
-        # generates random float
-        temp = (end - start) * self.uniform() + start
-        print(str(temp) + " <" + str(self.seed) + ">")
-        return temp
+#     def uniform_range(self, start: float, end: float):
+#         # generates random float
+#         temp = (end - start) * self.uniform() + start
+#         print(str(temp) + " <" + str(self.seed) + ">")
+#         return temp
     
-    def uniform_restricted(self, start: float, end: float):
-        # Generates random int value
-        temp = math.floor(abs(1 + end - start) * self.uniform() + start)
-        # print(str(temp) + " <" + str(self.seed) + ">")
-        return temp
+#     def uniform_restricted(self, start: float, end: float):
+#         # Generates random int value
+#         temp = math.floor(abs(1 + end - start) * self.uniform() + start)
+#         # print(str(temp) + " <" + str(self.seed) + ">")
+#         return temp
 
 
 class LCG_CLS:
@@ -105,9 +104,46 @@ class LCG_CLS:
 
 
 if __name__ == "__main__":
-    p = LCG()
-    for _ in range(100):
-        print(p.uniform_restricted(0, 2*math.pi))
+    dataset = []
+    for _ in range(800):
+        dataset.append(LCG_CLS().uniform_int(1.0, 5.0))
+
+    distribution = list(Counter(dataset).values())
+    dist, pvalue = chisquare(distribution)
+    uni = 'YES' if pvalue > 0.05 else 'NO'
+    print('----------------------------------------------------------------')
+    print(f"| Value:{dist:12.3f} | p-value: {pvalue:12.8f} Uniform: {uni:^8} |")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # temp = []
     # for _ in range(100):
     #     temp.append(p.uniform_restricted(1, 3))
