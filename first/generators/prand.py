@@ -7,31 +7,82 @@ import math
 import time
 
 
+# class LCG:
+#     def __init__(self) -> None:
+#         self.a=1103515245
+#         self.c=12345
+#         self.m=pow(2, 31)
+#         self.seed = 0
 
-class LCG:
-    def __init__(self) -> None:
-        self.a=1103515245
-        self.c=12345
-        self.m=pow(2, 31)
-        self.seed = 0
+#     def __seed(self):
+#         """Seed generator using system time"""
+#         self.seed = round(datetime.now().timestamp()*10009)
+#         # print("Generating seed ..." + str(self.seed))
 
-    def __seed(self):
-        """Seed generator using system time"""
-        time.sleep(0.001)
-        self.seed = round(datetime.now().timestamp()*10009)
+#     def generate(self):
+#         self.__seed()
+#         time.sleep(0.001)
+#         # print(self.seed)
+#         return (self.a*self.seed + self.c) % self.m
 
-    def generate(self):
-        self.__seed()
-        return (self.a*self.seed + self.c) % self.m
+#     def uniform(self):
+#         temp = self.generate() / self.m
+#         return temp
 
-    def uniform(self):
-        return self.generate() / self.m
-
-    def uniform_range(self, start: float, end: float):
-        return (end - start) * self.uniform() + self.a
+#     def uniform_range(self, start: float, end: float):
+#         # generates random float
+#         temp = (end - start) * self.uniform() + start
+#         print(str(temp) + " <" + str(self.seed) + ">")
+#         return temp
     
-    def uniform_restricted(self, start: float, end: float):
-        return math.floor(abs(1 + end - start) * self.uniform() + start)
+#     def uniform_restricted(self, start: float, end: float):
+#         # Generates random int value
+#         temp = math.floor(abs(1 + end - start) * self.uniform() + start)
+#         # print(str(temp) + " <" + str(self.seed) + ">")
+#         return temp
+
+
+class LCG_CLS:
+    "LCG generator implemented using classmethods"
+    seed = int(datetime.now().timestamp() * 10003)
+    x = seed
+    a = 22695477
+    c = 1
+    m = 2 ** 32
+
+    @classmethod
+    def _seed(cls, seed: int) -> None:
+        # set_seed
+        cls.seed = seed
+        cls.x = seed
+
+    @classmethod
+    def generate(cls) -> int:
+        # random
+        cls.x = (cls.a * cls.x + cls.c) % cls.m
+        return cls.x
+
+    @classmethod
+    def uniform(cls) -> float:
+        # uniform
+        # [0, 1)
+        return cls.generate() / cls.m
+
+    @classmethod
+    def uniform_range(cls, a: float, b: float) -> float:
+        # uniform_range
+        # [a, b)
+        return (b - a) * cls.uniform() + a
+
+    @classmethod
+    def uniform_int(cls, a: int, b: int) -> int:
+        # randint
+        # [a, b]
+        return math.floor(abs(b - a + 1) * cls.uniform() + a)
+
+
+
+
 
     # def generate(self):
     #     while True:
@@ -53,20 +104,69 @@ class LCG:
 
 
 if __name__ == "__main__":
-    p = LCG()
-    # ucl = p.unifrom_restricted(1, 3)
-    temp = []
-    for _ in range(100):
-        temp.append(p.uniform_restricted(1, 3))
+    dataset = []
+    for _ in range(800):
+        dataset.append(LCG_CLS().uniform_int(1.0, 5.0))
 
-    dataset = list(Counter(temp).values())
-
-    plt.hist(temp, bins=3)
-    plt.savefig('./test.jpg')
-
-    dist, pvalue = chisquare(dataset)
+    distribution = list(Counter(dataset).values())
+    dist, pvalue = chisquare(distribution)
     uni = 'YES' if pvalue > 0.05 else 'NO'
-    print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+    print('----------------------------------------------------------------')
+    print(f"| Value:{dist:12.3f} | p-value: {pvalue:12.8f} Uniform: {uni:^8} |")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # temp = []
+    # for _ in range(100):
+    #     temp.append(p.uniform_restricted(1, 3))
+
+    # dataset = list(Counter(temp).values())
+
+    # plt.hist(temp, bins=3)
+    # plt.savefig('./test.jpg')
+
+    # dist, pvalue = chisquare(dataset)
+    # uni = 'YES' if pvalue > 0.05 else 'NO'
+    # print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+
+    # x = []
+    # y = []
+    # for _ in range(100):
+    #     x.append(p.uniform_restricted(1, 1000))
+
+    # for _ in range(100):
+    #     y.append(p.uniform_restricted(1, 1000))
+
+    # plt.scatter(x, y)
+    # plt.savefig('gen_scatter.jpg')
     
 
 
