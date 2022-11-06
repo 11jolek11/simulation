@@ -1,0 +1,17 @@
+from collections import Counter
+from scipy.stats import chisquare
+
+
+
+if __name__ == "__main__":
+    dataset = []
+    for _ in range(800):
+        dataset.append(getrandom(1.0, 5.0))
+
+    print(dataset)
+    distribution = list(Counter(dataset).values())
+    dist, pvalue = chisquare(distribution)
+    uni = '\033[92mYES\033[0m' if pvalue > 0.05 else '\033[91mNO\033[0m'
+    print('-----------------------------------------------------------')
+    print(f"| Value:{dist:12.3f} | p-value: {pvalue:12.8f} Uniform: {uni:^8} |")
+    print('-----------------------------------------------------------')

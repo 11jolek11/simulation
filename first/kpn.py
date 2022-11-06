@@ -42,6 +42,9 @@ def play():
     # 0 - lost
 
     gen = LCG_CLS()
+    # 1 - kamien
+    # 2 - papier
+    # 3 - nozyce
     first = [gen.uniform_int(1, 3) for _ in range(100)]
     second = [gen.uniform_int(1, 3) for _ in range(100)]
     # first = [gen.uniform_restricted(1, 3) for _ in range(100)]

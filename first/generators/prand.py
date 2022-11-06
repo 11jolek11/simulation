@@ -78,6 +78,9 @@ class LCG_CLS:
     def uniform_int(cls, a: int, b: int) -> int:
         # randint
         # [a, b]
+        # cls._seed(datetime.now().timestamp() * 10003)
+        # temp = ((cls.a * cls.x + cls.c) % cls.m) / cls.m
+        # return int(math.floor(b * temp) + a)
         return math.floor(abs(b - a + 1) * cls.uniform() + a)
 
 
@@ -106,13 +109,16 @@ class LCG_CLS:
 if __name__ == "__main__":
     dataset = []
     for _ in range(800):
-        dataset.append(LCG_CLS().uniform_int(1.0, 5.0))
+        dataset.append(LCG_CLS().uniform_int(1, 5))
+
+    print(dataset)
 
     distribution = list(Counter(dataset).values())
     dist, pvalue = chisquare(distribution)
-    uni = 'YES' if pvalue > 0.05 else 'NO'
-    print('----------------------------------------------------------------')
+    uni = '\033[92mYES\033[0m' if pvalue > 0.05 else '\033[91mNO \033[0m'
+    print('-----------------------------------------------------------')
     print(f"| Value:{dist:12.3f} | p-value: {pvalue:12.8f} Uniform: {uni:^8} |")
+    print('-----------------------------------------------------------')
 
 
 
