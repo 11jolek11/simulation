@@ -1,7 +1,6 @@
 from generators.prand import LCG_CLS
 import matplotlib.pyplot as plt
 from collections import Counter
-from generators.prand import LCG
 from scipy.stats import chisquare
 
 
@@ -22,17 +21,27 @@ def generate_histogram(zipped: zip):
         two = two - 1
         temp.append(possible_output_matrix[one][two])
 
+    print('Rozkład wyników')
+    print("H0: Każdy gracz ma taką samą szansę na wygraną")
+    print("HA: Każdy gracz ma różne szanse na wygraną")
     dataset = list(Counter(temp).values())
-    print(Counter(temp))
+    labels = list(Counter(temp).keys())
+    # print(labels)
+    # print(Counter(temp))
     dist, pvalue = chisquare(dataset)
     uni = 'YES' if pvalue > 0.05 else 'NO'
     print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+    if pvalue > 0.05: print("Różnice nie są wystarczająco znaczące przy alpha=0.05 przyjmujemy H0")
+    else: print("Różnice nie są wystarczająco znaczące przy alpha=0.05 aby odrzucić H0")
 
-    fig, ax = plt.subplots(1, 1)
-    bins=[0, 1, 2, 3]
-    ax.hist(temp, bins = bins)
-    plt.xticks(bins)
-    plt.xlabel('Loss Draws Wins')
+    fig, ax = plt.subplots(1,1)
+    # ax.hist(temp, bins=bins)
+    bars = ax.bar(list(Counter(temp).keys()), list(Counter(temp).values()), width=1.0)
+    ax.set_xticks(sorted(list(Counter(temp).keys())), labels=['Loss', 'Draws', 'Wins'])
+    ax.bar_label(bars)
+    # b = ax.bar(list(Counter(temp).keys()), list(Counter(temp).values()))
+    # ax.bar_label(ax.containers[0])
+    plt.tight_layout()
     plt.savefig('./images/kpn/kpn_hist.jpg')
 
 
@@ -50,10 +59,12 @@ def play():
     # first = [gen.uniform_restricted(1, 3) for _ in range(100)]
     # second = [gen.uniform_restricted(1, 3) for _ in range(100)]
 
-    dataset = list(Counter(second).values())
-    dist, pvalue = chisquare(dataset)
-    uni = 'YES' if pvalue > 0.05 else 'NO'
-    print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
+    # print('Rozklad rzutów drugiego gracza')
+    # dataset = list(Counter(second).values())
+    # print(Counter(second))
+    # dist, pvalue = chisquare(dataset)
+    # uni = 'YES' if pvalue > 0.05 else 'NO'
+    # print(f"{dist:12.3f} {pvalue:12.8f} {uni:^8}")
 
     zipped = zip(first, second)
     # print(zipped)
@@ -73,7 +84,6 @@ def play():
 
 if __name__ == "__main__":
     pl = play()
-    print(pl)
     generate_histogram(pl)
     # plt.hist(pl, bins=3)
     # plt.savefig('./test.jpg')

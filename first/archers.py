@@ -13,15 +13,15 @@ from scipy.stats import chisquare
 
 def first_archer():
     dist = LCG_CLS.uniform_int(0, 1000)
-    points = max(10 - int(dist/40), 0)
+    points = max(10 - int(dist/80), 0)
     return points
 
 def second_archer():
     x = LCG_CLS.uniform_int(-900, 900)
     y = LCG_CLS.uniform_int(-900, 900)
     distance = math.sqrt(x**2 + y**2)
-    # TODO: co to jest
-    score = max(10 - int(distance/40), 0)
+
+    score = max(10 - int(distance/80), 0)
     return score
 
 def play(games=20):
@@ -47,26 +47,26 @@ unique, counts = np.unique(wined, return_counts=True)
 
 
 print("H0: Gracze średnio uzyskują równe wyniki")
-print("HA: Gracze średnio uzyskują różne wyniki")
+print("HA: Gracze średnio uzyskują inne wyniki")
 stat, p = ttest_ind(wyniki1, wyniki2)
 print(stat, p)
-if p < 0.05: print("Różnice nie są wystarczająco znaczące dla poziomu istotności 95%, zatem przyjmujemy H0")
-else: print("Różnice są wystarczające dla poziomu istotności 95% aby odrzucić H0, przyjmując tym HA")
+if p < 0.05: print("Różnice nie są wystarczająco znaczące dla alpha=5%, przyjmujemy H0")
+else: print("Różnice są wystarczające dla alpha=5%, odrzucamy H0")
 
 # plt.style.use('ggplot')
 plt.rcParams["figure.figsize"] = (12, 5)
 f, (ax1, ax2) = plt.subplots(1, 2, sharey=False)
 
-ax1.hist(wyniki1, label="Pierwszy łucznik", color="tab:orange", histtype='bar')
-ax1.hist(wyniki2, label="Drugi łucznik", color="tab:blue", histtype='bar')
+ax1.hist(wyniki1, label="Pierwszy łucznik", color="tab:red", histtype='bar')
+ax1.hist(wyniki2, label="Drugi łucznik", color="tab:green", histtype='bar')
 ax1.legend()
 ax1.set_title("Częstość występowania ilości punktów")
 
 bintuple = []
 for i in list(data_holder.keys()):
-    if i == -1: bintuple.append("Przegrane")
-    elif i == 0: bintuple.append("Remisy")
-    else: bintuple.append("Wygrane")
+    if i == -1: bintuple.append("Loses")
+    elif i == 0: bintuple.append("Draws")
+    else: bintuple.append("Wins")
 
 bars = ax2.bar(list(data_holder.keys()), list(data_holder.values()))
 ax2.set_xticks(list(data_holder.keys()), tuple(bintuple))
